@@ -1,0 +1,216 @@
+<html>
+<head>
+<style>
+body {
+  margin: 0;
+  font-family: Menlo, monaco, Courier;
+  font-size: 12px;
+}
+.container {
+  padding: 10px;
+  margin: 0 auto;
+  padding-bottom: 200px;
+  padding-top: 50px;
+  max-width: 800px;
+}
+.row.noflex {
+  display: block;
+}
+.row {
+  display: flex;
+  padding: 10px;
+}
+.row .item {
+  flex-grow: 1;
+}
+.row .button.selected {
+  background: gold;
+}
+.row h2 {
+  font-size: 15px;
+}
+.row .button {
+  text-align: center;
+  color: black;
+  padding: 20px;
+  text-decoration: none;
+  margin: 5px;
+  border: 2px solid gray;
+}
+.row input[type=text], .row textarea {
+  padding: 10px;
+  text-align: left;
+}
+.row pre {
+  background: #2a2a2a;
+  color: silver;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 3px;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+#send {
+  background: gold;
+  padding: 20px;
+  flex-grow: 1;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+}
+#txconfirmation a {
+  padding: 50px;
+  text-align: center;
+  border: 2px dotted cornflowerblue;
+  color: cornflowerblue;
+  font-size: 14px;
+  flex-grow: 1;
+  font-weight: bold;
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://unpkg.com/datapay"></script>
+<script>
+var endpoint = "https://bchsvexplorer.com/api/tx/send";
+var transaction = null;
+var selected = null;
+var sending = false;
+document.addEventListener("DOMContentLoaded", function(event) {
+  var messageEl = document.querySelector("#message");
+  var keyEl = document.querySelector("#privatekey");
+  var codeEl = document.querySelector("#code");
+  var txEl = document.querySelector("#tx");
+  var hexEl = document.querySelector("#hex");
+  var memoEl = document.querySelector("#memo");
+  var bpEl = document.querySelector("#blockpress");
+  var sendEl = document.querySelector("#send");
+  var confirmEl = document.querySelector("#txconfirmation");
+  messageEl.oninput = function(e) {
+    update()
+  }
+  keyEl.oninput = function(e) {
+    update()
+  }
+  memoEl.onclick = function(e) {
+    selected = '0x6d02'
+    e.target.className = "button item selected";
+    bpEl.className = "button item";
+    update()
+    return false;
+  }
+  bpEl.onclick = function(e) {
+    selected = '0x8d02'
+    e.target.className = "button item selected";
+    memoEl.className = "button item";
+    update()
+    return false;
+  }
+  sendEl.onclick = function(e) {
+    if (!sending) {
+      var v = transaction.verify();
+      if (typeof v === 'string') {
+        alert(v);
+      } else {
+        e.target.textContent = "Sending...";
+        sending = true;
+        fetch(endpoint, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: JSON.stringify({rawtx: transaction.toString()})
+        })
+        .then(function(res) {
+          return res.json();
+        })
+        .then(function(response) {
+          console.log("Response = ", response)
+          e.target.textContent = "Sent!";
+          confirmEl.innerHTML = "<a href='https://bchsvexplorer.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+        })
+      }
+    }
+    return false;
+  }
+
+  var update = function() {
+    var dsl = {};
+    if (selected) {
+      if (messageEl.value.length > 0) {
+        dsl.data = [selected, messageEl.value];
+      }
+      if (keyEl.value.length > 0) {
+        dsl.pay = { key: keyEl.value }
+      }
+      codeEl.textContent = JSON.stringify(dsl, null, 2)
+      datapay.build(dsl, function(err, tx) {
+        transaction = tx;
+        txEl.textContent = JSON.stringify(tx.toObject(), null, 2);
+        hexEl.textContent = tx.toString()
+      })
+    }
+  }
+  update()
+})
+</script>
+</head>
+<body>
+  <div class='container'>
+    <div class='row noflex'>
+      <h1>Bitcoin SV Microblogging Playground</h1>
+      This website uses an open source Bitcoin SV library called <a href='https://github.com/unwriter/datapay'>Datapay</a> to construct and broadcast OP_RETURN Bitcoin SV Transactions.<br><br>
+      1. All the signing takes place 100% on the client side so your private key is safe. (Check out the source code to make sure)<br><br>
+      2. After the signed transaction is constructed, you can broadcast it to Bitcoin SV network by pressing the "Send" button. This will broadcast the signed transaction through a public JSON-RPC endpoint.
+    </div>
+    <div class='row'>
+      <h2>Step 1. Select a protocol</h2>
+    </div>
+    <div class='row'>
+      <a class='button item' href='#' id='memo'>Generate a post for Memo.cash</a>
+      <a class='button item' href='#' id='blockpress'>Generate a post for Blockpress</a>
+    </div>
+    <div class='row'>
+      <h2>Step 2. Write a message</h2>
+    </div>
+    <div class='row'>
+      <textarea id='message' class='item' placeholder='write a message'></textarea>
+    </div>
+    <div class='row'>
+      <h2>Step 3. Paste the private key</h2>
+    </div>
+    <div class='row'>
+      <input type='text' id='privatekey' placeholder='enter private key' class='item'>
+    </div>
+    <div class='row'>
+      <h2>Step 4. Review the DSL</h2>
+    </div>
+    <div class='row'>
+      <pre id='code' class='item'>generated DSL will show up here</pre> 
+    </div>
+    <div class='row'>
+      <h2>Step 5. The DSL generates the following transaction</h2>
+    </div>
+    <div class='row'>
+      <pre id='tx' class='item'>generated Transaction will show up here</pre>
+    </div>
+    <div class='row'>
+      <h2>Step 6. Send the hex encoded transaction!</h2>
+    </div>
+    <div class='row'>
+      <pre id='hex' class='item'>a hex encoded version of the transaction will show up here</pre>
+    </div>
+    <div class='row'>
+      <a href='#' id='send'>Send</a>
+    </div>
+    <div class='row' id='txconfirmation'>
+    </div>
+  </div>
+</body>
+</html>

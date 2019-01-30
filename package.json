@@ -1,0 +1,34 @@
+{
+  "name": "datapay",
+  "version": "0.0.7",
+  "description": "post data over bitcoin sv",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "browserify index.js --standalone datapay > dist/datapay.js && uglifyjs dist/datapay.js > dist/datapay.min.js"
+  },
+  "keywords": [
+    "bsv",
+    "bitcoinsv",
+    "bitcoin",
+    "blockchain",
+    "cryptocurrency"
+  ],
+  "author": "unwriter",
+  "license": "MIT",
+  "unpkg": "dist/datapay.min.js",
+  "dependencies": {
+    "bitcore-explorers": "^1.0.1",
+    "bsv": "0.23.0",
+    "buffer": "^5.2.1",
+    "mingo": "^2.2.4"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "dotenv": "^6.2.0",
+    "mocha": "^5.1.1",
+    "uglify-es": "^3.3.9"
+  }
+}

@@ -1,0 +1,156 @@
+<html>
+<head>
+<style>
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  display: flex;
+  margin: 0;
+}
+.hidden {
+  display: none;
+}
+.col {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  padding: 5px;
+  font-size: 12px;
+  font-family: Menlo, monaco, Courier;
+  text-align: center;
+  background: black;
+  color: white;
+}
+textarea {
+  font-size: 12px;
+  font-family: Menlo, monaco, Courier;
+  padding: 20px;
+  outline: none;
+  background: #2a2a2a;
+  color: rgba(255,255,255,0.8);
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+#send {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  padding: 10px 20px;
+  font-family: Menlo, monaco, Courier;
+  background: gold;
+  font-size: 12px;
+  color: black;
+  text-decoration: none;
+}
+#sent {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  background: black;
+  color: gold;
+  padding: 10px 30px;
+}
+#sent a {
+  text-decoration: none;
+}
+#how {
+  font-size: 12px;
+  font-family: Menlo, monaco, Courier;
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: black;
+  color: gold;
+  padding: 10px 30px;
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://unpkg.com/datapay"></script>
+<script>
+var endpoint = "https://bchsvexplorer.com/api/tx/send";
+document.addEventListener("DOMContentLoaded", function(event) {
+  var dslEl = document.querySelector("#dsl");
+  var txEl = document.querySelector("#tx");
+  var hexEl = document.querySelector("#hex");
+  var sendEl = document.querySelector("#send");
+  var howEl = document.querySelector("#how");
+  dslEl.oninput = function(e) {
+    update(e.target.value)
+  }
+  howEl.onclick = function(e) {
+    alert("The first column is where you declaratively describe your transaction (See datapay documentation). The second column is where the generated transaction is displayed. The third column displays the actual hex encoded string that can be broadcasted to Bitcoin SV network. The default transaction description is just a simple data-only OP_RETURN transaction which only spends 300 satoshi transaction fee and nothing more, but you can experiment with different options as well. WARNING: THIS ACTUALLY WORKS, SO HANDLE WITH CARE.")
+    return false;
+  }
+  var update = function(html) {
+    var h = html.replace(/\n/g, '');
+    datapay.build(JSON.parse(h), function(err, tx) {
+      txEl.value = JSON.stringify(tx.toObject(), null, 2);
+      hexEl.value = tx.toString()
+    })
+  }
+  sendEl.onclick = function(e) {
+    var t = hexEl.value;
+    var isvalid = new datapay.bsv.Transaction(t).verify();
+    if (isvalid) {
+      send(t)
+    }
+    return false;
+  }
+  update(dslEl.value)
+})
+var send = function(transaction) {
+  fetch(endpoint, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({rawtx: transaction})
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(response) {
+    console.log(response);
+    document.querySelector("#sent").innerHTML = "<a href='https://bchsvexplorer.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+    document.querySelector("#sent").className = "";
+    document.querySelector("#send").className = "hidden";
+  })
+}
+</script>
+</head>
+<body>
+<div class='col'>
+<div class='header'>Transaction Description</div>
+<textarea id='dsl'>
+{
+  "data": ["0x6d02", "post to memo.cash!"],
+  "pay": {
+    "key": ""
+  }
+}
+</textarea>
+</div>
+<div class='col'>
+<div class='header'>Generated Transaction</div>
+<textarea id='tx'></textarea>
+</div>
+<div class='col'>
+<div class='header'>Hex Format</div>
+<textarea id='hex'></textarea>
+</div>
+<a href='#' id='send'>Click to Broadcast Transaction ></a>
+<div id='sent' class='hidden'></div>
+<a id='how' href='#'>how does this work?</a>
+</body>
+</html>

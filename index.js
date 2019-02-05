@@ -3,7 +3,7 @@ const _Buffer = require('buffer/')
 const bitcoin = require('bsv');
 const explorer = require('bitcore-explorers');
 const defaults = {
-  rpc: "https://bchsvexplorer.com",
+  rpc: "https://api.bitindex.network",
   fee: 400
 }
 // The end goal of 'build' is to create a hex formated transaction object

@@ -77,7 +77,7 @@ body {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://unpkg.com/datapay"></script>
 <script>
-var endpoint = "https://bchsvexplorer.com/api/tx/send";
+var endpoint = "https://api.bitindex.network/api/tx/send";
 var transaction = null;
 var selected = null;
 var sending = false;
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         .then(function(response) {
           console.log("Response = ", response)
           e.target.textContent = "Sent!";
-          confirmEl.innerHTML = "<a href='https://bchsvexplorer.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+          confirmEl.innerHTML = "<a href='https://api.bitindex.network/api/v2/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
         })
       }
     }

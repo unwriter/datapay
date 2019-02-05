@@ -18,7 +18,7 @@ Post to the blockchain with just 4 lines of code.
 
 ## 1. Datapay Transaction Composer
 
-- [Datapay transaction composer](https://unwriter.github.io/datapay/example/composer.html)
+- [Datapay transaction composer](https://unwriter.github.io/datapay/example/composer)
 
 - [View source](example/composer.html)
 
@@ -26,7 +26,7 @@ Post to the blockchain with just 4 lines of code.
 
 Post to both Memo.cash and Blockpress with a single interface.
 
-- [DEMO](https://unwriter.github.io/datapay/example/playground.html)
+- [DEMO](https://unwriter.github.io/datapay/example/playground)
 
 - [View source](example/playground.html)
 

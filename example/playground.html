@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         .then(function(response) {
           console.log("Response = ", response)
           e.target.textContent = "Sent!";
-          confirmEl.innerHTML = "<a href='https://bchsvexplorer.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+          confirmEl.innerHTML = "<a href='https://api.bitindex.network/api/v2/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
         })
       }
     }

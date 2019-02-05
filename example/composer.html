@@ -122,7 +122,7 @@ var send = function(transaction) {
   })
   .then(function(response) {
     console.log(response);
-    document.querySelector("#sent").innerHTML = "<a href='https://bchsvexplorer.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+    document.querySelector("#sent").innerHTML = "<a href='https://api.bitindex.network/api/v2/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
     document.querySelector("#sent").className = "";
     document.querySelector("#send").className = "hidden";
   })

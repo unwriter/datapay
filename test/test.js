@@ -1,6 +1,6 @@
 require('dotenv').config()
 const assert = require('assert');
-const bitcoin = require('bsv');
+const bitcoin = require('bsv')
 const datapay = require('../index');
 
 // Private Key for Demo Purpose Only
@@ -21,6 +21,28 @@ describe('datapay', function() {
   })
   describe('build', function() {
     describe('data only', function() {
+      it('opcode', function(done) {
+        const options = {
+          data: [{op: 78}, "hello world"]
+        }
+        datapay.build(options, function(err, tx) {
+          let generated = tx.toObject()
+          let s = new bitcoin.Script(generated.outputs[0].script).toString()
+          assert(s.startsWith("OP_RETURN OP_PUSHDATA4 1818585099"))
+          done()
+        });
+      })
+      it('opcode 2', function(done) {
+        const options = {
+          data: ["0x6d02", "hello world", {op: 78}, "blah blah blah * 10^100"]
+        }
+        datapay.build(options, function(err, tx) {
+          let generated = tx.toObject()
+          let s = new bitcoin.Script(generated.outputs[0].script).toString()
+          assert(s.startsWith("OP_RETURN 2 0x6d02 11 0x68656c6c6f20776f726c64 OP_PUSHDATA4 1634492951"))
+          done()
+        });
+      })
       it('push data array', function(done) {
         const options = {
           data: ["0x6d02", "hello world"]
@@ -57,7 +79,7 @@ describe('datapay', function() {
           done()
         });
       })
-      it.only('Buffer', function(done) {
+      it('Buffer', function(done) {
         const options = {
           data: [Buffer.from("abc"), "hello world"]
         }

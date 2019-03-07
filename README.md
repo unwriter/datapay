@@ -191,6 +191,8 @@ datapay.build(tx, function(err, tx) {
 
 **To use Buffer types, just pass the Buffer (or ArrayBuffer) object as push data.**
 
+**To use an opcode, pass an object `{op: [OPCODE]}`**
+
 In above example, we can see that the first item is `"0x6d02"`. Datapay will automatically recognize this as a hex string and interpret as a hex string (while discarding the 0x prefix before the interpretation)
 
 

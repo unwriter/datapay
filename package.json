@@ -1,6 +1,6 @@
 {
   "name": "datapay",
-  "version": "0.0.8",
+  "version": "0.0.11",
   "description": "post data over bitcoin sv",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "unpkg": "dist/datapay.min.js",
   "dependencies": {
     "bitcore-explorers": "^1.0.1",
-    "bsv": "0.23.0",
+    "bsv": "0.24.5",
     "buffer": "^5.2.1",
     "mingo": "^2.2.4"
   },

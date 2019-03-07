@@ -111,12 +111,16 @@ var _script = function(options) {
           s.add(buffer)
         } else if (item.constructor.name === 'Buffer') {
           s.add(item)
-        } else if (/^0x/i.test(item)) {
-          // ex: 0x6d02
-          s.add(Buffer.from(item.slice(2), "hex"))
-        } else {
-          // ex: "hello"
-          s.add(Buffer.from(item))
+        } else if (typeof item === 'string') {
+          if (/^0x/i.test(item)) {
+            // ex: 0x6d02
+            s.add(Buffer.from(item.slice(2), "hex"))
+          } else {
+            // ex: "hello"
+            s.add(Buffer.from(item))
+          }
+        } else if (typeof item === 'object' && item.hasOwnProperty('op')) {
+          s.add({ opcodenum: item.op })
         }
       })
     } else if (typeof options.data === 'string') {

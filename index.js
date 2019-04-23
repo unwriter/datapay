@@ -40,6 +40,11 @@ var build = function(options, callback) {
     const address = privateKey.toAddress();
     const insight = new explorer.Insight(rpcaddr)
     insight.getUnspentUtxos(address, function (err, res) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
       if (options.pay.filter && options.pay.filter.q && options.pay.filter.q.find) {
         let f = new mingo.Query(options.pay.filter.q.find)
         res = res.filter(function(item) {

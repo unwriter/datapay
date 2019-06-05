@@ -265,6 +265,7 @@ The `pay` attribute deals with everything related to actually sending money.
 - `key`: Signing with private key
 - `rpc`: Specifying a JSON-RPC endpoint to broadcast through
 - `fee`: Specifying transaction fee
+- `feeb`: Specifying transaction fee per byte
 - `to`: Attaching tips on top of OP_RETURN messages (Normally OP_RETURN transactions don't have a receiver)
 
 When a `pay` attribute is present, the `build()` call generates a `transaction` instead of a `script`.
@@ -309,7 +310,7 @@ datapay.build(tx, function(err, res) {
 })
 ```
 
-#### 3. `fee`
+#### 3a. `fee`
 
 The `fee` attribute is used to specify the transaction fee in **satoshis**.
 
@@ -322,6 +323,29 @@ const tx = {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
     rpc: "https://api.bitindex.network",
     fee: 400
+  }
+}
+datapay.build(tx, function(err, res) {
+  /**
+  * res contains the generated transaction object
+  * (a signed transaction, since 'key' is included)
+  **/
+})
+```
+
+#### 3b. `feeb`
+
+The `feeb` attribute is used to specify the transaction fee per byte in **satoshis**.
+
+- default: `1.04`
+
+```
+const tx = {
+  data: ["0x6d02", "hello world"],
+  pay: {
+    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+    rpc: "https://api.bitindex.network",
+    feeb: 1.04
   }
 }
 datapay.build(tx, function(err, res) {

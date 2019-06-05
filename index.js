@@ -4,7 +4,8 @@ const bitcoin = require('bsv');
 const explorer = require('bitcore-explorers');
 const defaults = {
   rpc: "https://api.bitindex.network",
-  fee: 400
+  fee: 400,
+  feeb: 1.04
 }
 // The end goal of 'build' is to create a hex formated transaction object
 // therefore this function must end with _tx() for all cases 
@@ -63,12 +64,9 @@ var build = function(options, callback) {
       }
 
       tx.fee(defaults.fee).change(address);
-      if (options.pay && options.pay.fee) {
-        tx.fee(options.pay.fee)
-      } else {
-        var estSize=Math.ceil(tx._estimateSize()*1.4);
-        tx.fee(estSize);
-      }
+      let opt_pay = options.pay || {};
+      let myfee = opt_pay.fee || Math.ceil(tx._estimateSize()* (opt_pay.feeb || defaults.feeb));
+      tx.fee(myfee);
 
       //Check all the outputs for dust
       for(var i=0;i<tx.outputs.length;i++){

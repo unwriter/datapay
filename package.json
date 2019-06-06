@@ -1,6 +1,6 @@
 {
   "name": "datapay",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "post data over bitcoin sv",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "mingo": "^2.2.4"
   },
   "peerDependencies": {
-    "bsv": "0.26.4"
+    "bsv": "0.27.1"
   },
   "files": [
     "dist"

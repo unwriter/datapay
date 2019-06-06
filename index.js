@@ -5,7 +5,7 @@ const explorer = require('bitcore-explorers');
 const defaults = {
   rpc: "https://api.bitindex.network",
   fee: 400,
-  feeb: 1.04
+  feeb: 1.4
 }
 // The end goal of 'build' is to create a hex formated transaction object
 // therefore this function must end with _tx() for all cases 

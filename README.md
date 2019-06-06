@@ -41,6 +41,12 @@ Post to both Memo.cash and Blockpress with a single interface.
 npm install --save datapay
 ```
 
+Also install `bsv` (Datapay has a peer dependency on bsv).
+
+```
+npm install --save bsv
+```
+
 and then require it
 
 ```
@@ -50,7 +56,7 @@ const datapay = require('datapay')
 ## 2. In browser
 
 ```
-<script src='https://unpkg.com/datapay@0.0.12/dist/datapay.min.js'></script>
+<script src='https://unpkg.com/datapay@0.0.15/dist/datapay.min.js'></script>
 ```
 
 ---

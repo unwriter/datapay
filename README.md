@@ -343,7 +343,7 @@ datapay.build(tx, function(err, res) {
 
 The `feeb` attribute is used to specify the transaction fee per byte in **satoshis**.
 
-- default: `1.04`
+- default: `1.4`
 
 ```
 const tx = {

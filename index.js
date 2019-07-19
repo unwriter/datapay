@@ -89,14 +89,19 @@ var build = function(options, callback) {
   }
 }
 var send = function(options, callback) {
+  if (!callback) {
+    callback = function() {};
+  }
+
   build(options, function(err, tx) {
+    if (err) {
+      callback(err);
+      return;
+    }
+
     let rpcaddr = (options.pay && options.pay.rpc) ? options.pay.rpc : defaults.rpc;
     const insight = new explorer.Insight(rpcaddr)
-    if (callback) {
-      insight.broadcast(tx.toString(), callback)
-    } else {
-      insight.broadcast(tx.toString(), function() { })
-    }
+    insight.broadcast(tx.toString(), callback)
   })
 }
 // compose script

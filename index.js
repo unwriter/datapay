@@ -110,6 +110,9 @@ var _script = function(options) {
   if (options.data) {
     if (Array.isArray(options.data)) {
       s = new bitcoin.Script();
+      if (options.safe) {
+        s.add(bitcoin.Opcode.OP_FALSE);
+      }
       // Add op_return
       s.add(bitcoin.Opcode.OP_RETURN);
       options.data.forEach(function(item) {

@@ -63,9 +63,10 @@ var build = function(options, callback) {
         })
       }
 
-      tx.fee(defaults.fee).change(address);
+      tx.fee(defaults.fee).change(address).sign(privateKey);
+      let txsize = Math.ceil( tx.toString().length/2 );
       let opt_pay = options.pay || {};
-      let myfee = opt_pay.fee || Math.ceil(tx._estimateSize()* (opt_pay.feeb || defaults.feeb));
+      let myfee = opt_pay.fee || Math.ceil(txsize* (opt_pay.feeb || defaults.feeb));
       tx.fee(myfee);
 
       //Check all the outputs for dust

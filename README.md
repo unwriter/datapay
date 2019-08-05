@@ -37,13 +37,10 @@ Post to both Memo.cash and Blockpress with a single interface.
 
 ## 1. In node.js
 
+Install both `datapay` and `bsv` (Datapay has a peer dependency on bsv)
+
 ```
 npm install --save datapay
-```
-
-Also install `bsv` (Datapay has a peer dependency on bsv).
-
-```
 npm install --save bsv
 ```
 
@@ -69,6 +66,7 @@ Send `"Hello from datapay"` to [memo.cash](https://memo.cash) in 5 lines of code
 ```
 const privateKey = [YOUR PRIVATE KEY HERE];
 datapay.send({
+  safe: true,
   data: ["0x6d02", "Hello from datapay"],
   pay: { key: privateKey }
 });
@@ -84,6 +82,7 @@ Datapay lets you build a transaction in a declarative manner. Here's an example:
 
 ```
 var config = {
+  safe: true,
   data: ["0x6d02", "hello from datapay"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
@@ -159,6 +158,7 @@ The `build()` method takes two arguments:
 
 The first argument--a declarative JSON object--can contain the following attributes:
 
+- `safe`: Please set to `true`. This will create a "safe" `OP_FALSE OP_RETURN` transaction instead of raw `OP_RETURN`. ([Learn more](https://bitcoinsv.io/2019/07/27/the-return-of-op_return-roadmap-to-genesis-part-4/))
 - `data`: For constructing `OP_RETURN` data
 - `pay`: For describing everything related to actually sending money
 - `tx`: For importing previously "built" transactions
@@ -174,6 +174,7 @@ The `data` attribute is used to construct human readable/processable data to pos
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"]
 }
 datapay.build(tx, function(err, tx) {  
@@ -208,6 +209,7 @@ In Node.js (Buffer)
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", Buffer.from("Abc"), "hello world"]
 }
 datapay.build(tx, function(err, tx) {  
@@ -282,6 +284,7 @@ The `key` attribute is mandatory. You must specify a private key in order to sig
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }
@@ -302,6 +305,7 @@ The `rpc` attribute is used to manually set the JSON-RPC endpoint you wish to br
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
@@ -324,6 +328,7 @@ The `fee` attribute is used to specify the transaction fee in **satoshis**.
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
@@ -347,6 +352,7 @@ The `feeb` attribute is used to specify the transaction fee per byte in **satosh
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
@@ -373,6 +379,7 @@ The `to` attribute is an array of receivers to send the OP_RETURN to. Normally t
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
@@ -406,6 +413,7 @@ For this feature, datapay uses [Bitquery](https://docs.bitdb.network/docs/query_
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
@@ -490,6 +498,7 @@ The only difference is the callback function.
 
 ```
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"])
   pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }
@@ -504,6 +513,7 @@ datapay.send(tx, function(err, res) {
 // Build and export an unsigned transaction for later usage
 var exportedTxHex = "";
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"]
 }
 datapay.build(tx, function(err, res) {
@@ -528,6 +538,7 @@ This time since the exported transaction is already signed, no need for addition
 // Build and export an unsigned transaction for later usage
 var exportedSignedTxHex = "";
 const tx = {
+  safe: true,
   data: ["0x6d02", "hello world"],
   pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }

@@ -18,11 +18,11 @@
   "license": "MIT",
   "unpkg": "dist/datapay.min.js",
   "dependencies": {
-    "bitcore-explorers": "^1.0.1",
-    "buffer": "^5.2.1"
+    "buffer": "^5.2.1",
+    "node-fetch": "^2.6.0"
   },
   "peerDependencies": {
-    "bsv": "git://github.com/Breavyn/bsv.git#tx-size"
+    "bsv": "git+https://github.com/Breavyn/bsv.git#tx-size"
   },
   "files": [
     "dist"

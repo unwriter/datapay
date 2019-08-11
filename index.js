@@ -1,33 +1,38 @@
 require("buffer");
+const fetch = require("node-fetch");
 const bsv = require("bsv");
-const { Insight } = require("bitcore-explorers");
 
 const defaults = {
-  rpc: "https://api.bitindex.network",
   feeb: 1.0
 };
 
 let insight;
 
-const connect = (endpoint, network = "livenet") => {
-  insight = new Insight(endpoint || defaults.rpc, network);
+const connect = (url = "https://api.bitindex.network/api/v3/main", headers) => {
+  insight = { url, headers };
 };
 
-const getUTXOs = address =>
-  new Promise((resolve, reject) => {
-    insight.getUnspentUtxos(address, (err, res) => {
-      if (err) reject(err);
-      else resolve(res);
-    });
+const getUTXOs = async address => {
+  const res = await fetch(`${insight.url}/addrs/utxo`, {
+    method: "POST",
+    body: JSON.stringify({ addrs: address.toString() }),
+    headers: { "Content-Type": "application/json", ...insight.headers }
   });
 
-const broadcast = rawtx =>
-  new Promise((resolve, reject) => {
-    insight.broadcast(rawtx, (err, txid) => {
-      if (err) reject(err);
-      else resolve(txid);
-    });
+  if (res.ok) return await res.json();
+  throw `${res.status} ${res.statusText}`;
+};
+
+const broadcast = async rawtx => {
+  const res = await fetch(`${insight.url}/tx/send`, {
+    method: "POST",
+    body: JSON.stringify({ rawtx }),
+    headers: { "Content-Type": "application/json", ...insight.headers }
   });
+
+  if (res.ok) return await res.json();
+  throw `${res.status} ${res.statusText}`;
+};
 
 const build = async ({ data, safe, pay }) => {
   const tx = new bsv.Transaction();

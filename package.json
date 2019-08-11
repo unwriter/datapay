@@ -23,7 +23,7 @@
     "mingo": "^2.2.4"
   },
   "peerDependencies": {
-    "bsv": "0.27.1"
+    "bsv": "^0.30.0"
   },
   "files": [
     "dist"

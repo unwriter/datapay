@@ -64,8 +64,8 @@ const build = async ({ data, safe, pay }) => {
   return tx;
 };
 
-const send = async (options, tx) => {
-  if (options && !tx) tx = await build(options);
+const send = async options => {
+  const tx = options.tx || (await build(options));
   return await broadcast(tx.serialize());
 };
 
@@ -98,10 +98,23 @@ const createDataScript = (data, safe) => {
   return s;
 };
 
-insight = connect();
+const callbackWrapper = func => {
+  return async (options, callback) => {
+    try {
+      result = await func(options);
+      if (callback) callback(null, result);
+      else return result;
+    } catch (err) {
+      if (callback) callback(err);
+      else throw err;
+    }
+  };
+};
+
+connect();
 
 module.exports = {
-  build,
-  send,
+  build: callbackWrapper(build),
+  send: callbackWrapper(send),
   connect
 };

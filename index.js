@@ -37,8 +37,8 @@ const broadcast = async rawtx => {
 const build = async ({ data, safe, pay }) => {
   const tx = new bsv.Transaction();
 
-  const script = createDataScript(data, safe);
-  if (script) {
+  if (data.length) {
+    const script = createDataScript(data, safe);
     tx.addOutput(new bsv.Transaction.Output({ script, satoshis: 0 }));
   }
 
@@ -70,7 +70,6 @@ const send = async options => {
 };
 
 const createDataScript = (data, safe) => {
-  if (!data) return;
   if (typeof data === "string") return bsv.Script.fromHex(data);
 
   const s = new bsv.Script();

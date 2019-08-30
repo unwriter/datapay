@@ -50,9 +50,7 @@ var build = function(options, callback) {
 
   const to = pay.to || [];
   to.forEach(function(receiver) {
-    if (receiver.value >= 546) {
-      tx.to(receiver.address, receiver.value);
-    }
+    tx.to(receiver.address, receiver.value);
   });
 
   // Instantiate pay

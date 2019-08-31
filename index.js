@@ -4,21 +4,22 @@ const bitcoin = require('bsv');
 const explorer = require('bitcore-explorers');
 const defaults = {
   rpc: "https://api.bitindex.network",
-  fee: 400,
   feeb: 1.4
 }
 // The end goal of 'build' is to create a hex formated transaction object
 // therefore this function must end with _tx() for all cases 
 // and return a hex formatted string of either a tranaction or a script
 var build = function(options, callback) {
+  const rpcaddr = (options.pay && options.pay.rpc) ? options.pay.rpc : defaults.rpc;
+
   let script = null;
-  let rpcaddr = (options.pay && options.pay.rpc) ? options.pay.rpc : defaults.rpc;
+  const tx = new bitcoin.Transaction(options.tx)
+
   if (options.tx) {
     // if tx exists, check to see if it's already been signed.
     // if it's a signed transaction
     // and the request is trying to override using 'data' or 'pay',
     // we should throw an error
-    let tx = new bitcoin.Transaction(options.tx)
     // transaction is already signed
     if (tx.inputs.length > 0 && tx.inputs[0].script) {
       if (options.pay || options.data) {
@@ -33,12 +34,32 @@ var build = function(options, callback) {
       script = _script(options)
     }
   }
+
+  if (script) {
+    tx.addOutput(new bitcoin.Transaction.Output({ script: script, satoshis: 0 }));
+  }
+
+  const pay = options.pay || {};
+
+  if (pay.fee) {
+    tx.fee(opt_pay.fee);
+  } else {
+    const feeb = pay.feeb || defaults.feeb;
+    tx.feePerKb(feeb * 1000);
+  }
+
+  const to = pay.to || [];
+  to.forEach(function(receiver) {
+    tx.to(receiver.address, receiver.value);
+  });
+
   // Instantiate pay
-  if (options.pay && options.pay.key) {
+  if (pay.key) {
     // key exists => create a signed transaction
-    let key = options.pay.key;
-    const privateKey = new bitcoin.PrivateKey(key);
+    const privateKey = new bitcoin.PrivateKey(pay.key);
     const address = privateKey.toAddress();
+    tx.change(address);
+
     const insight = new explorer.Insight(rpcaddr)
     insight.getUnspentUtxos(address, function (err, res) {
       if (err) {
@@ -46,46 +67,20 @@ var build = function(options, callback) {
         return;
       }
 
-      if (options.pay.filter && options.pay.filter.q && options.pay.filter.q.find) {
-        let f = new mingo.Query(options.pay.filter.q.find)
+      if (pay.filter && pay.filter.q && pay.filter.q.find) {
+        const f = new mingo.Query(pay.filter.q.find);
         res = res.filter(function(item) {
           return f.test(item)
         })
       }
-      let tx = new bitcoin.Transaction(options.tx).from(res);
 
-      if (script) {
-        tx.addOutput(new bitcoin.Transaction.Output({ script: script, satoshis: 0 }));
-      }
-      if (options.pay.to && Array.isArray(options.pay.to)) {
-        options.pay.to.forEach(function(receiver) {
-          tx.to(receiver.address, receiver.value)
-        })
-      }
+      tx.from(res);
 
-      tx.fee(defaults.fee).change(address);
-      let opt_pay = options.pay || {};
-      let myfee = opt_pay.fee || Math.ceil(tx._estimateSize()* (opt_pay.feeb || defaults.feeb));
-      tx.fee(myfee);
-
-      //Check all the outputs for dust
-      for(var i=0;i<tx.outputs.length;i++){
-        if(tx.outputs[i]._satoshis>0 && tx.outputs[i]._satoshis<546){
-          tx.outputs.splice(i,1);
-          i--;
-        }
-      }
-      let transaction = tx.sign(privateKey);
-      callback(null, transaction);
-    })
+      tx.sign(privateKey);
+      callback(null, tx);
+    });
   } else {
-    // key doesn't exist => create an unsigned transaction
-    let fee = (options.pay && options.pay.fee) ? options.pay.fee : defaults.fee;
-    let tx = new bitcoin.Transaction(options.tx).fee(fee);
-    if (script) {
-      tx.addOutput(new bitcoin.Transaction.Output({ script: script, satoshis: 0 }));
-    }
-    callback(null, tx)
+    callback(null, tx);
   }
 }
 var send = function(options, callback) {

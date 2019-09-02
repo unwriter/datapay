@@ -92,7 +92,8 @@ var config = {
       address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
       value: 1000
     }]
-  }
+  },
+  change: "1CBtFi158ieej44LJ9XkoGuH99t1BFh15j"
 }
 ```
 
@@ -432,6 +433,32 @@ datapay.build(tx, function(err, tx) {
   /**
   * res contains the generated transaction object
   * (a signed transaction, since 'key' is included)
+  **/
+})
+```
+
+
+#### 6. `change`
+
+The `change` attribute is used to optionally specify where change for unspent funds pays out to, making it easy to implement single-use addresses.
+
+- default: sender's address
+
+```
+const tx = {
+  safe: true,
+  data: ["0x6d02", "hello world"],
+  pay: {
+    key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
+  },
+  change: "1CBtFi158ieej44LJ9XkoGuH99t1BFh15j"
+}
+datapay.build(tx, function(err, res) {
+  /**
+  * res contains the generated transaction object
+  * (a signed transaction, since 'key' is included.)
+  * It also pays any unspent change to the address
+  * in the change field instead of returning to sender.
   **/
 })
 ```

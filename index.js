@@ -62,8 +62,10 @@ var build = function(options, callback) {
           tx.to(receiver.address, receiver.value)
         })
       }
-
-      tx.fee(defaults.fee).change(address);
+      
+      //Pay remaining outputs to next address if defined, or default back to sender's address
+      const change = options.change ? new bitcoin.Address.fromString(options.change) : address;
+      tx.fee(defaults.fee).change(change);
       let opt_pay = options.pay || {};
       let myfee = opt_pay.fee || Math.ceil(tx._estimateSize()* (opt_pay.feeb || defaults.feeb));
       tx.fee(myfee);

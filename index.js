@@ -1,11 +1,7 @@
-require("buffer");
-const fetch = require("node-fetch");
+const axios = require("axios");
 const bsv = require("bsv");
 
-const defaults = {
-  feeb: 1.0
-};
-
+const defaults = { feeb: 1.0 };
 let insight;
 
 const connect = (url = "https://api.bitindex.network/api/v3/main", headers) => {
@@ -13,25 +9,23 @@ const connect = (url = "https://api.bitindex.network/api/v3/main", headers) => {
 };
 
 const getUTXOs = async address => {
-  const res = await fetch(`${insight.url}/addrs/utxo`, {
-    method: "POST",
-    body: JSON.stringify({ addrs: address.toString() }),
-    headers: { "Content-Type": "application/json", ...insight.headers }
-  });
+  const res = await axios.post(
+    `${insight.url}/addrs/utxo`,
+    { addrs: address.toString() },
+    { headers: { ...insight.headers } }
+  );
 
-  if (res.ok) return await res.json();
-  throw `${res.status} ${res.statusText}`;
+  return res.data;
 };
 
 const broadcast = async rawtx => {
-  const res = await fetch(`${insight.url}/tx/send`, {
-    method: "POST",
-    body: JSON.stringify({ rawtx }),
-    headers: { "Content-Type": "application/json", ...insight.headers }
-  });
+  const res = await axios.post(
+    `${insight.url}/tx/send`,
+    { rawtx },
+    { headers: { ...insight.headers } }
+  );
 
-  if (res.ok) return await res.json();
-  throw `${res.status} ${res.statusText}`;
+  return res.data;
 };
 
 const build = async ({ data, safe, pay }) => {

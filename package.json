@@ -19,8 +19,7 @@
   "unpkg": "dist/datapay.min.js",
   "dependencies": {
     "axios": "^0.19.0",
-    "bsv": "^0.30.0",
-    "buffer": "^5.2.1"
+    "bsv": "^0.30.0"
   },
   "files": [
     "dist"

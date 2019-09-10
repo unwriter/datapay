@@ -4,34 +4,24 @@ const bsv = require("bsv");
 const defaults = { feeb: 1.0 };
 let insight;
 
-const connect = (url = "https://api.bitindex.network/api/v3/main", headers) => {
-  insight = { url, headers };
+const connect = options => {
+  insight = axios.create(options);
 };
 
 const getUTXOs = async address => {
-  const res = await axios.post(
-    `${insight.url}/addrs/utxo`,
-    { addrs: address.toString() },
-    { headers: { ...insight.headers } }
-  );
-
+  const res = await insight.post("/addrs/utxo", { addrs: address.toString() });
   return res.data;
 };
 
 const broadcast = async rawtx => {
-  const res = await axios.post(
-    `${insight.url}/tx/send`,
-    { rawtx },
-    { headers: { ...insight.headers } }
-  );
-
+  const res = await insight.post("/tx/send", { rawtx });
   return res.data;
 };
 
 const build = async ({ data, safe, pay }) => {
   const tx = new bsv.Transaction();
 
-  if (data.length) {
+  if (data && data.length) {
     const script = createDataScript(data, safe);
     tx.addOutput(new bsv.Transaction.Output({ script, satoshis: 0 }));
   }
@@ -104,7 +94,7 @@ const callbackWrapper = func => {
   };
 };
 
-connect();
+connect({ baseURL: "https://api.bitindex.network/api/v3/main" });
 
 module.exports = {
   build: callbackWrapper(build),

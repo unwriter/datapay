@@ -39,7 +39,7 @@ const build = async ({ data, safe, pay }) => {
     tx.change(address);
 
     let utxos = await getUTXOs(address);
-    if (filter) utxos = utxos.filter(filter);
+    if (filter) utxos = filter(utxos);
     tx.from(utxos);
 
     tx.sign(privateKey);

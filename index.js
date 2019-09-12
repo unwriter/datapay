@@ -9,13 +9,23 @@ const connect = options => {
 };
 
 const getUTXOs = async address => {
-  const res = await insight.post("/addrs/utxo", { addrs: address.toString() });
-  return res.data;
+  try {
+    const res = await insight.post("/addrs/utxo", {
+      addrs: address.toString()
+    });
+    return res.data;
+  } catch (err) {
+    throw new Error(`Failed to retrieve utxo's for ${address}: ${err.message}`);
+  }
 };
 
 const broadcast = async rawtx => {
-  const res = await insight.post("/tx/send", { rawtx });
-  return res.data;
+  try {
+    const res = await insight.post("/tx/send", { rawtx });
+    return res.data;
+  } catch (err) {
+    throw new Error(`Failed to broadcast transaction: ${err.message}`);
+  }
 };
 
 const build = async ({ data, safe, pay }) => {

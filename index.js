@@ -107,6 +107,8 @@ const callbackWrapper = func => {
 connect({ baseURL: "https://api.bitindex.network/api/v3/main" });
 
 module.exports = {
+  getUTXOs,
+  broadcast,
   build: callbackWrapper(build),
   send: callbackWrapper(send),
   connect

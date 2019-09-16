@@ -18,7 +18,9 @@
   "license": "MIT",
   "unpkg": "dist/datapay.min.js",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.19.0"
+  },
+  "peerDependencies": {
     "bsv": "^0.30.0"
   },
   "files": [

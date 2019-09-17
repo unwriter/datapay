@@ -22,7 +22,7 @@ const getUTXOs = async address => {
 const broadcast = async rawtx => {
   try {
     const res = await insight.post("/tx/send", { rawtx });
-    return res.data;
+    return res.data ? res.data.txid : null;
   } catch (err) {
     throw new Error(`Failed to broadcast transaction: ${err.message}`);
   }

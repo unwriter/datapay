@@ -24,7 +24,7 @@ Post to the blockchain with just 4 lines of code.
 
 ## 2. Microblogging Playground
 
-Post to both Memo.cash and Blockpress with a single interface.
+Post to both Memo.sv and Blockpress with a single interface.
 
 - [DEMO](https://unwriter.github.io/datapay/example/playground)
 
@@ -60,7 +60,7 @@ const datapay = require('datapay')
 
 # Quickstart
 
-Send `"Hello from datapay"` to [memo.cash](https://memo.cash) in 5 lines of code.
+Send `"Hello from datapay"` to [memo.sv](https://memo.sv) in 5 lines of code.
 
 
 ```
@@ -98,7 +98,7 @@ var config = {
 
 Above config describes a transaction that:
 
-- Posts `"hello from datapay"` to [memo.cash](https://memo.cash) network (See the protocol at [https://memo.cash/protocol](https://memo.cash/protocol)),
+- Posts `"hello from datapay"` to [memo.sv](https://memo.sv) network (See the protocol at [https://memo.sv/protocol](https://memo.sv/protocol)),
 - paying the fee of `400` satoshis,
 - signed with a private key: `5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw`,
 - through a public JSON-RPC endpoint at [https://api.bitindex.network](https://api.bitindex.network)

@@ -16,11 +16,11 @@ const callbackWrapper = func => {
 
 let insight;
 
-const connect = options => {
+module.exports.connect = options => {
   insight = axios.create(options);
 };
 
-connect({ baseURL: "https://api.bitindex.network/api/v3/main" });
+module.exports.connect({ baseURL: "https://api.bitindex.network/api/v3/main" });
 
 module.exports.getUTXOs = async address => {
   try {

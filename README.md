@@ -1,3 +1,70 @@
+# About This Fork
+
+This fork contains several changes from unwriter's original version.
+
+## 1. Axios insight implementation
+
+The `connect` method can now be used to create an axios instance which will be
+used for retrieving utxo's and broadcasting raw transactions.
+
+This is an example of using BitIndex's testnet endpoint, with an api key.
+
+```
+datapay.connect({
+  baseURL: "https://api.bitindex.network/api/v3/test",
+  headers: { api_key: "myapikey" }
+});
+```
+
+## 2. Promises
+
+Both build and send now return promises which can be used with async/await.
+
+```
+const tx = await datapay.build({
+  data: ["using promises with datapay"],
+  safe: true,
+  pay: {
+    key: "<your privatekey>"
+  }
+});
+
+const txid = await datapay.send({ tx });
+```
+
+## 3. Fees
+
+This fork is using bsv 0.30.0 which has a fixed implementation of fee
+estimation. The default fee is set to 1 sat/byte. This means the fee paid should
+be exact, or only a sat or two over exact.
+
+## 4. Filtering
+
+The mingo filtering has been removed in favour of using a plain javascript
+function.
+
+```
+const tx = await datapay.build({
+  data: ["using promises with datapay"],
+  safe: true,
+  pay: {
+    key: "<your privatekey>",
+    filter: utxos => utxos.filter(utxo => utxo.confirmations > 5)
+  }
+});
+```
+
+# Using This Fork
+
+The api here is still evolving so I recommend using the package-lock file or installing a specific commit.
+
+```
+npm install git+https://github.com/Breavyn/datapay.git#<commit hash>
+
+# e.g.
+npm install git+https://github.com/Breavyn/datapay.git#8fa2715d28ddd16c8efa0c61ec99700fc7674408
+```
+
 # Datapay
 
 Datapay is the simplest library for building and broadcasting data transactions to the **Bitcoin SV blockchain**.
@@ -8,7 +75,7 @@ Datapay is the simplest library for building and broadcasting data transactions 
 
 # Preview
 
-Post to the blockchain with just 4 lines of code. 
+Post to the blockchain with just 4 lines of code.
 
 ![code](code.png)
 
@@ -31,7 +98,6 @@ Post to both Memo.cash and Blockpress with a single interface.
 - [View source](example/playground.html)
 
 ---
-
 
 # Install
 
@@ -61,7 +127,6 @@ const datapay = require('datapay')
 # Quickstart
 
 Send `"Hello from datapay"` to [memo.cash](https://memo.cash) in 5 lines of code.
-
 
 ```
 const privateKey = [YOUR PRIVATE KEY HERE];
@@ -163,21 +228,18 @@ The first argument--a declarative JSON object--can contain the following attribu
 - `pay`: For describing everything related to actually sending money
 - `tx`: For importing previously "built" transactions
 
-
 ### A. data
 
 The `data` attribute is used to construct human readable/processable data to post to the blockchain.
 
-
 #### 1. Buid from push data array
-
 
 ```
 const tx = {
   safe: true,
   data: ["0x6d02", "hello world"]
 }
-datapay.build(tx, function(err, tx) {  
+datapay.build(tx, function(err, tx) {
   /**
   * res contains the generated transaction object, powered by bsv
   * You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
@@ -194,14 +256,13 @@ datapay.build(tx, function(err, tx) {
 2. a hex string
 3. Binary data ([Buffer](https://nodejs.org/api/buffer.html) in node.js, and [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) in browser)
 
-**To use hex string, simply prefix the string with "0x"**. 
+**To use hex string, simply prefix the string with "0x"**.
 
 **To use Buffer types, just pass the Buffer (or ArrayBuffer) object as push data.**
 
 **To use an opcode, pass an object `{op: [OPCODE]}`** (You can see the OPCODE list [here](https://github.com/moneybutton/bsv/blob/master/lib/opcode.js#L78))
 
 In above example, we can see that the first item is `"0x6d02"`. Datapay will automatically recognize this as a hex string and interpret as a hex string (while discarding the 0x prefix before the interpretation)
-
 
 #### 2. Build from Binary Data + String
 
@@ -212,7 +273,7 @@ const tx = {
   safe: true,
   data: ["0x6d02", Buffer.from("Abc"), "hello world"]
 }
-datapay.build(tx, function(err, tx) {  
+datapay.build(tx, function(err, tx) {
   /**
   * res contains the generated transaction object, powered by bsv
   * You can check it out at https://github.com/moneybutton/bsv/blob/master/lib/transaction/transaction.js
@@ -296,10 +357,9 @@ datapay.build(tx, function(err, tx) {
 })
 ```
 
-
 #### 2. `rpc`
 
-The `rpc` attribute is used to manually set the JSON-RPC endpoint you wish to broadcast through. 
+The `rpc` attribute is used to manually set the JSON-RPC endpoint you wish to broadcast through.
 
 - default: `https://api.bitindex.network`
 
@@ -410,7 +470,6 @@ But sometimes you want more fine-grained control over which UTXOs to use for a t
 
 For this feature, datapay uses [Bitquery](https://docs.bitdb.network/docs/query_v3) as a filter to describe the UTXOs to filter out.
 
-
 ```
 const tx = {
   safe: true,
@@ -469,7 +528,6 @@ datapay.build({
 ```
 
 Notice how in addition to the `tx` attribute we've added the `pay.key` attribute. This will import the unsigned transaction and sign it.
-
 
 #### 3. Importing and sending a signed transaction from exported hex string
 
@@ -532,7 +590,6 @@ datapay.send({
 ### C. Building a SIGNED transaction and exporting, and then later importing and sending
 
 This time since the exported transaction is already signed, no need for additional `pay.key` attriute when sending later
-
 
 ```
 // Build and export an unsigned transaction for later usage
@@ -598,7 +655,7 @@ datapay.connect().getUnspentUtxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR", function
   if (err) {
     console.log("Error: ", err)
   } else {
-    console.log(utxos) 
+    console.log(utxos)
   }
 })
 ```
@@ -610,7 +667,7 @@ datapay.connect('https://api.bitindex.network').getUnspentUtxos("14xMz8rKm4L83Ru
   if (err) {
     console.log("Error: ", err)
   } else {
-    console.log(utxos) 
+    console.log(utxos)
   }
 });
 ```

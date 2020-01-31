@@ -77,7 +77,10 @@ textarea {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://unpkg.com/datapay@0.0.17/dist/datapay.min.js"></script>
 <script>
-var endpoint = "https://api.bitindex.network/api/tx/send";
+var endpoint = "https://api.mattercloud.net/api/v3/main/tx/send"; // alternative: 'https://api.whatsonchain.com/v1/bsv/main/tx/raw'
+var rawTxKey = 'rawtx'; // use 'txhex' for api.whatsonchain.com
+var apiKey = ''; // only needed for api.mattercloud.net when exeeding 3 tx per 15 seconds.
+                 // Get the API key from https://www.mattercloud.net/#get-api-key
 document.addEventListener("DOMContentLoaded", function(event) {
   var dslEl = document.querySelector("#dsl");
   var txEl = document.querySelector("#tx");
@@ -109,20 +112,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
   update(dslEl.value)
 })
 var send = function(transaction) {
+  header = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+
+  if (apiKey.length > 0)
+    header.apikey = apiKey;
+  
   fetch(endpoint, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
+    headers: header,
     method: 'POST',
-    body: JSON.stringify({rawtx: transaction})
+    body: `{"${rawTxKey}": "${transaction.toString()}"}`
   })
   .then(function(res) {
     return res.json();
   })
   .then(function(response) {
     console.log(response);
-    document.querySelector("#sent").innerHTML = "<a href='https://api.bitindex.network/api/v2/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
+    document.querySelector("#sent").innerHTML = "<a href='https://whatsonchain.com/tx/" + response.txid + "' target='_blank'>Success! Click to view Transaction</a>";
     document.querySelector("#sent").className = "";
     document.querySelector("#send").className = "hidden";
   })

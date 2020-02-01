@@ -1,6 +1,6 @@
 {
   "name": "datapay",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "post data over bitcoin sv",
   "main": "index.js",
   "scripts": {

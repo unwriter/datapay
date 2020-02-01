@@ -86,7 +86,7 @@ var config = {
   data: ["0x6d02", "hello from datapay"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.bitindex.network",
+    rpc: "https://api.mattercloud.net",
     fee: 400,
     to: [{
       address: "1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81",
@@ -101,7 +101,7 @@ Above config describes a transaction that:
 - Posts `"hello from datapay"` to [memo.cash](https://memo.cash) network (See the protocol at [https://memo.cash/protocol](https://memo.cash/protocol)),
 - paying the fee of `400` satoshis,
 - signed with a private key: `5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw`,
-- through a public JSON-RPC endpoint at [https://api.bitindex.network](https://api.bitindex.network)
+- through a public JSON-RPC endpoint at [https://api.mattercloud.net](https://api.mattercloud.net)
 - while tipping the user `1A2JN4JAUoKCQ5kA4pHhu4qCqma8jZSU81` a value of `1000` satoshis.
 
 All you need to do to invoke it is call:
@@ -301,7 +301,7 @@ datapay.build(tx, function(err, tx) {
 
 The `rpc` attribute is used to manually set the JSON-RPC endpoint you wish to broadcast through. 
 
-- default: `https://api.bitindex.network`
+- default: `https://api.mattercloud.net`
 
 ```
 const tx = {
@@ -309,7 +309,7 @@ const tx = {
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.bitindex.network"
+    rpc: "https://api.mattercloud.net"
   }
 };
 datapay.build(tx, function(err, res) {
@@ -332,7 +332,7 @@ const tx = {
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.bitindex.network",
+    rpc: "https://api.mattercloud.net",
     fee: 400
   }
 }
@@ -356,7 +356,7 @@ const tx = {
   data: ["0x6d02", "hello world"],
   pay: {
     key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw",
-    rpc: "https://api.bitindex.network",
+    rpc: "https://api.mattercloud.net",
     feeb: 1.04
   }
 }
@@ -589,7 +589,7 @@ Using this endpoint you can connect to a public JSON-RPC endpoint to let you mak
 datapay.connect([RPC ENDPOINT]).[METHOD]
 ```
 
-If you leave the `RPC ENDPOINT` part out, it will automatically use the default https://api.bitindex.network node
+If you leave the `RPC ENDPOINT` part out, it will automatically use the default https://api.mattercloud.net node
 
 ### Example 1: Connecting to default node and calling `getUnspentUtxos()` method:
 
@@ -606,7 +606,7 @@ datapay.connect().getUnspentUtxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR", function
 ### Example 2. Specifying a JSON-RPC endpoint
 
 ```
-datapay.connect('https://api.bitindex.network').getUnspentUtxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR", function(err, utxos) {
+datapay.connect('https://api.mattercloud.net').getUnspentUtxos("14xMz8rKm4L83RuZdmsHXD2jvENZbv72vR", function(err, utxos) {
   if (err) {
     console.log("Error: ", err)
   } else {

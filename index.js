@@ -3,7 +3,7 @@ const _Buffer = require('buffer/')
 const bitcoin = require('bsv');
 const explorer = require('bitcore-explorers');
 const defaults = {
-  rpc: "https://api.bitindex.network",
+  rpc: "api.mattercloud.net",
   fee: 400,
   feeb: 1.4
 }

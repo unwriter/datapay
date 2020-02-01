@@ -595,12 +595,12 @@ describe('datapay', function() {
       it('default', function() {
         var insight = datapay.connect();
         assert.equal(insight.constructor.name, "Insight")
-        assert.equal(insight.url, 'https://api.bitindex.network')
+        assert.equal(insight.url, 'https://api.mattercloud.net')
       })
       it('connect with url', function() {
-        var insight = datapay.connect('https://api.bitindex.network');
+        var insight = datapay.connect('https://api.mattercloud.net');
         assert.equal(insight.constructor.name, "Insight")
-        assert.equal(insight.url, 'https://api.bitindex.network')
+        assert.equal(insight.url, 'https://api.mattercloud.net')
       })
     })
   })

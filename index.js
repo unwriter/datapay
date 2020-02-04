@@ -20,7 +20,7 @@ module.exports.connect = options => {
   insight = axios.create(options);
 };
 
-module.exports.connect({ baseURL: "https://api.bitindex.network/api/v3/main" });
+module.exports.connect({ baseURL: "https://api.mattercloud.network/api/v3/main" });
 
 module.exports.getUTXOs = async address => {
   try {

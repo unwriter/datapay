@@ -23,7 +23,6 @@ Both build and send now return promises which can be used with async/await.
 ```
 const tx = await datapay.build({
   data: ["using promises with datapay"],
-  safe: true,
   pay: {
     key: "<your privatekey>"
   }
@@ -46,13 +45,16 @@ function.
 ```
 const tx = await datapay.build({
   data: ["using promises with datapay"],
-  safe: true,
   pay: {
     key: "<your privatekey>",
     filter: utxos => utxos.filter(utxo => utxo.confirmations > 5)
   }
 });
 ```
+
+## 5. Genesis defaults
+
+`OP_FALSE OP_RETURN` is now used by default and the `safe: true` option has been removed.
 
 # Using This Fork
 

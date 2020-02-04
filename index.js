@@ -42,11 +42,11 @@ module.exports.broadcast = async rawtx => {
   }
 };
 
-module.exports.build = callbackWrapper(async ({ data, safe, pay }) => {
+module.exports.build = callbackWrapper(async ({ data, pay }) => {
   const tx = new bsv.Transaction();
 
   if (data && data.length) {
-    const script = module.exports.createDataScript(data, safe);
+    const script = module.exports.createDataScript(data);
     tx.addOutput(new bsv.Transaction.Output({ script, satoshis: 0 }));
   }
 
@@ -79,13 +79,13 @@ module.exports.send = callbackWrapper(async options => {
   return await module.exports.broadcast(tx.serialize());
 });
 
-module.exports.createDataScript = (data, safe) => {
+module.exports.createDataScript = data => {
   if (typeof data === "string") return bsv.Script.fromHex(data);
 
   const s = new bsv.Script();
 
   // Add OP_RETURN
-  if (safe) s.add(bsv.Opcode.OP_FALSE);
+  s.add(bsv.Opcode.OP_FALSE);
   s.add(bsv.Opcode.OP_RETURN);
 
   // Add data

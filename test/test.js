@@ -36,7 +36,7 @@ describe("datapay", function() {
         const script = datapay.createDataScript([{ op: 78 }, "hello world"]);
         assert.equal(
           script.toASM(),
-          "OP_RETURN OP_PUSHDATA4 68656c6c6f20776f726c64"
+          "0 OP_RETURN OP_PUSHDATA4 68656c6c6f20776f726c64"
         );
       });
 
@@ -46,22 +46,20 @@ describe("datapay", function() {
           "hello world"
         ]);
 
-        assert.equal(script.toASM(), "OP_RETURN 616263 68656c6c6f20776f726c64");
+        assert.equal(
+          script.toASM(),
+          "0 OP_RETURN 616263 68656c6c6f20776f726c64"
+        );
       });
 
       it("should add a utf-8 string", function() {
         const script = datapay.createDataScript(["hello world"]);
-        assert.equal(script.toASM(), "OP_RETURN 68656c6c6f20776f726c64");
+        assert.equal(script.toASM(), "0 OP_RETURN 68656c6c6f20776f726c64");
       });
 
       it("should add a hex string", function() {
         const script = datapay.createDataScript(["0x6d02", "hello world"]);
-        assert.equal(script.toASM(), "OP_RETURN 6d02 68656c6c6f20776f726c64");
-      });
-
-      it("should add OP_0 with safe option", function() {
-        const script = datapay.createDataScript(["hello world"], true);
-        assert.equal(script.toASM(), "0 OP_RETURN 68656c6c6f20776f726c64");
+        assert.equal(script.toASM(), "0 OP_RETURN 6d02 68656c6c6f20776f726c64");
       });
     });
 
@@ -76,23 +74,13 @@ describe("datapay", function() {
 
   describe("#build()", function() {
     describe("with data", function() {
-      it("should add OP_0 with safe option", async function() {
-        const options = { data: ["hello world"], safe: true };
-        const tx = await datapay.build(options);
-        assert.equal(tx.outputs.length, 1);
-        assert.equal(
-          tx.outputs[0].script.toASM(),
-          "0 OP_RETURN 68656c6c6f20776f726c64"
-        );
-      });
-
       it("should add a data output", async function() {
         const options = { data: ["hello world"] };
         const tx = await datapay.build(options);
         assert.equal(tx.outputs.length, 1);
         assert.equal(
           tx.outputs[0].script.toASM(),
-          "OP_RETURN 68656c6c6f20776f726c64"
+          "0 OP_RETURN 68656c6c6f20776f726c64"
         );
       });
     });

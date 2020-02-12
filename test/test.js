@@ -20,6 +20,43 @@ describe('datapay', function() {
     })
   })
   describe('build', function() {
+    describe('safe as default', function() {
+      it('safe as default', function(done) {
+        const options = {
+          data: [{op: 78}, "hello world"]
+        }
+        datapay.build(options, function(err, tx) {
+          let generated = tx.toObject()
+          let s = new bitcoin.Script(generated.outputs[0].script).toString()
+          assert(s.startsWith("OP_0 OP_RETURN OP_PUSHDATA4 1818585099"))
+          done()
+        });
+      })
+      it('set safe true', function(done) {
+        const options = {
+          safe: true,
+          data: [{op: 78}, "hello world"]
+        }
+        datapay.build(options, function(err, tx) {
+          let generated = tx.toObject()
+          let s = new bitcoin.Script(generated.outputs[0].script).toString()
+          assert(s.startsWith("OP_0 OP_RETURN OP_PUSHDATA4 1818585099"))
+          done()
+        });
+      })
+      it('set safe false', function(done) {
+        const options = {
+          safe: false,
+          data: [{op: 78}, "hello world"]
+        }
+        datapay.build(options, function(err, tx) {
+          let generated = tx.toObject()
+          let s = new bitcoin.Script(generated.outputs[0].script).toString()
+          assert(s.startsWith("OP_RETURN OP_PUSHDATA4 1818585099"))
+          done()
+        });
+      })
+    })
     describe('data only', function() {
       it('opcode', function(done) {
         const options = {

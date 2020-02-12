@@ -110,6 +110,9 @@ var _script = function(options) {
   if (options.data) {
     if (Array.isArray(options.data)) {
       s = new bitcoin.Script();
+      if (!options.hasOwnProperty("safe")) {
+        options.safe = true;
+      }
       if (options.safe) {
         s.add(bitcoin.Opcode.OP_FALSE);
       }

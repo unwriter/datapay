@@ -499,7 +499,7 @@ The only difference is the callback function.
 ```
 const tx = {
   safe: true,
-  data: ["0x6d02", "hello world"])
+  data: ["0x6d02", "hello world"],
   pay: { key: "5JZ4RXH4MoXpaUQMcJHo8DxhZtkf5U5VnYd9zZH8BRKZuAbxZEw" }
 }
 datapay.send(tx, function(err, res) {

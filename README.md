@@ -169,7 +169,7 @@ The first argument--a declarative JSON object--can contain the following attribu
 The `data` attribute is used to construct human readable/processable data to post to the blockchain.
 
 
-#### 1. Buid from push data array
+#### 1. Build from push data array
 
 
 ```
